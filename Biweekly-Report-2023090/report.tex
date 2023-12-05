@@ -1,0 +1,124 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{outline} \usepackage{pmgraph} \usepackage[normalem]{ulem}
+\usepackage{graphicx} \usepackage{verbatim}
+% \usepackage{minted} % need `-shell-escape' argument for local compile
+
+\usepackage[UTF8]{ctex}
+\usepackage[inkscapeformat=png]{svg}
+
+\title{
+    \vspace*{1.0in}
+    \includesvg[width=2.75in]{figures/logo.svg} \\
+    \vspace*{1in}
+    \textbf{\Huge Biweekly Report}
+    \vspace{0.5in}
+}
+
+\author{ \\
+    \textbf{\huge userElaina} \\
+    \vspace*{1in}
+}
+
+\date{\LARGE 九月上}
+\setcounter{page}{-1}
+\newpage
+
+\begin{document}
+\LARGE
+
+\maketitle
+\tableofcontents
+% \setcounter{page}{0}
+\thispagestyle{empty}
+\newpage
+
+\section{实现并测试 SNN 输入数据的高精度表示}
+
+对于 1 个 float 数据, 在 SNN 中的一般表示方法为 1 个 time window 长的脉冲序列. 
+
+本次实验 (idea 来源: 顾老师) 尝试采用 2 个或 3 个 (time window 长的)脉冲序列来表示, 使用 Rate coding. 后文将表示同一个 float 数据的 2 个或 3 个脉冲序列称一组脉冲序列.
+
+1. 对于每组脉冲序列, 进入一个超级神经元, 之后的结构不变. 实现上使用普通非全链接层 (2-1 对应或 3-1 对应) 实现, 即全连接层 + Mask. 效果 (Acc) 反而变差.
+
+2. 考虑到 (1) 中额外加了一层非全链接层, 考虑是否和非全链接层有关. 因此在原模型中加入一个 1-1 对应的普通非全链接层. 发现效果也变差.
+
+3. 抛弃非全连接层, 考虑将一组脉冲序列分到不同的 Channel 中. 有效果, 但不明显.
+
+4. 抛弃非全连接层, 考虑将一组脉冲序列的位置"相邻", 即输入的(高维)矩阵的某一维乘了 2 或 3, 卷积核形状在对应维度做同样的乘法. 有效果, 但不明显, 且收敛速度明显变慢.
+
+5. 将 (4) 中的卷积核变为原模型的. 效果基本同 (4), 收敛速度与 (4) 比明显加快, 但还是比原模型慢.
+
+6. 更换各种形状的卷积核重复实验, 未得到更好的效果.
+
+更换数据集, 重复 (1) 到 (6), 得到结论基本相同.
+
+\section{***}
+
+(本次为给一位学长做实验, 具体分工在本 section 末).
+
+在 *** 领域, 有算法 *** 等. 结合异步思想, 有算法 *** 等.
+
+在 *** 领域, 有算法 *** 等.
+
+结合上述文献, 主要结合 *** 和 *** 算法, 提出了解决 *** 问题的新算法.
+
+分工:
+
+\begin{itemize}
+    \item ***: ***, 设计实验, 写/改 paper 等.
+    \item ***: 设计实验, 写/改 paper 等.
+    \item userElaina: coding (包括部署对比测试等).
+\end{itemize}
+
+\section{阅读代码}
+
+\begin{itemize}
+    \item 一些 SNN 实现代码
+    \item \href{https://spikingjelly.readthedocs.io}{SpikingJelly} (惊蛰, SNN 库) module \href{https://github.com/fangwei123456/spikingjelly/tree/master/spikingjelly/datasets}{datasets}
+    \item ***
+    \item ***
+    \item ***
+    \item ***
+\end{itemize}
+
+\section{阅读文献}
+
+\begin{itemize}
+    \item \href{https://arxiv.org/abs/2205.00459}{Training High-Performance Low-Latency Spiking Neural Networks by Differentiation on Spike Representation}
+    \item ***
+    \item ***
+    \item ***
+    \item ***
+    \item ***
+    \item ***
+\end{itemize}
+
+\section{其它}
+
+学习 Arch Linux make package with custom PKGBUILD.
+
+恢复路由器和 PVE 环境. 搭建基于 v2raya 的临时网关. 修改分流规则.
+
+个人项目维护.
+
+参加 SFD 2023 活动: RISC-V Linux 与软件自由日.
+
+听报告:
+
+\begin{itemize}
+    \item 开源软件与 RISC-V --最好的相遇 (吴伟, PLCT 实验室项目总监)
+    \item RISC-V Linux 内核开发与 Upstream 实践 (谭源, 泰晓社区系统软件工程师)
+\end{itemize}
+
+于展示环节, 我的\href{https://github.com/bad-apple-lab}{个人项目}作为样例程序, 在 RISC-V 开发板上部署运行.
+
+\end{document}
